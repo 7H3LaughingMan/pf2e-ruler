@@ -1,0 +1,58 @@
+{
+    "id": "pf2e-ruler",
+    "title": "PF2e Token Drag Ruler",
+    "description": "This module allows you to display a ruler when dragging a token that will show you how far you've moved that token.",
+    "version": "6.6.1",
+    "compatibility": {
+        "minimum": "12.327",
+        "verified": "12.327",
+        "maximum": "12.999"
+    },
+    "authors": [
+        {
+            "name": "7H3LaughingMan",
+            "discord": "7h3laughingman",
+            "url": "https://github.com/7H3LaughingMan"
+        }
+    ],
+    "url": "https://github.com/7H3LaughingMan/pf2e-ruler",
+    "manifest": "https://github.com/7H3LaughingMan/pf2e-ruler/raw/main/module.json",
+    "download": "https://github.com/7H3LaughingMan/pf2e-ruler/archive/refs/heads/main.zip",
+    "license": "https://github.com/7H3LaughingMan/pf2e-ruler/blob/main/LICENSE",
+    "readme": "https://github.com/7H3LaughingMan/pf2e-ruler/blob/main/README.md",
+    "bugs": "https://github.com/7H3LaughingMan/pf2e-ruler/issues",
+    "changelog": "https://github.com/7H3LaughingMan/pf2e-ruler/blob/main/CHANGELOG.md",
+    "socket": true,
+    "esmodules": [
+        "scripts/module.js"
+    ],
+    "styles": [
+        "styles/module.css"
+    ],
+    "relationships": {
+        "systems": [
+            {
+                "id": "pf2e",
+                "type": "system",
+                "manifest": "https://github.com/foundryvtt/pf2e/releases/latest/download/system.json",
+                "compatibility": {
+                    "minimum": "6.0.1"
+                }
+            }
+        ],
+        "requires": [
+            {
+                "id": "lib-wrapper",
+                "type": "module",
+                "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json"
+            }
+        ]
+    },
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "languages/en.json"
+        }
+    ]
+}

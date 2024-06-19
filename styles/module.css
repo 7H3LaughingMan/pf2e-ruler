@@ -1,0 +1,19 @@
+div[data-setting-id="pf2e-ruler.singleAction"] > p.notes {
+    display: none;
+}
+
+div[data-setting-id="pf2e-ruler.doubleAction"] > p.notes {
+    display: none;
+}
+
+div[data-setting-id="pf2e-ruler.tripleAction"] > p.notes {
+    display: none;
+}
+
+div[data-setting-id="pf2e-ruler.quadrupleAction"] > p.notes {
+    display: none;
+}
+
+div[data-setting-id="pf2e-ruler.unreachable"] > p.notes {
+    display: none;
+}

@@ -1,0 +1,65 @@
+{
+    "pf2e-ruler": {
+        "clearMovementHistory": "Clear Movement History",
+        "settings": {
+            "rightClickAction": {
+                "name": "Right Click Action",
+                "hint": "What action should be performed when right-clicking while dragging a token?",
+                "choices": {
+                    "add": "Add Waypoint",
+                    "remove": "Remove Waypoint",
+                    "cancel": "Cancel Drag Ruler"
+                }
+            },
+            "tokenHighlighting": {
+                "name": "Use Token Speed Highlighting",
+                "hint": "When using the ruler, when do you want it to highlight a token's speed.",
+                "choices": {
+                    "never": "Never",
+                    "combat": "Combat Only",
+                    "always": "Always"
+                }
+            },
+            "limitActions": {
+                "name": "Limit Actions",
+                "hint": "This will limit the number of actions available to a token for movement if they are slowed/stunned."
+            },
+            "enableMovementHistory": {
+                "name": "Enable Combat Movement History",
+                "hint": "If enabled, PF2e Ruler will remember the path a token took during it's turn in combat."
+            },
+            "showPlayerSpeeds": {
+                "name": "Show Player Speeds",
+                "hint": "If enabled, any player owned token will have it's speed highlighted even if a user doesn't have observer permission for that actor."
+            },
+            "playerPathfinding": {
+                "name": "Enable Player Pathfinding",
+                "hint": "When enabled it allows players access to pathfinding."
+            },
+            "showGMRuler": {
+                "name": "Show GM Ruler",
+                "hint": "The ruler for GMs will be shown based on a token's disposition.",
+                "choices": {
+                    "all": "Show All",
+                    "neutral": "Show Friendly/Neutral",
+                    "friendly": "Show Friendly",
+                    "none": "Show None"
+                }
+            },
+            "singleAction": "Single Action",
+            "doubleAction": "Double Action",
+            "tripleAction": "Triple Action",
+            "quadrupleAction": "Quadruple Action",
+            "unreachable": "Unreachable"
+        },
+        "keybindings": {
+            "addWaypoint": "Add Waypoint",
+            "cancelDrag": "Cancel Drag Ruler",
+            "removeWaypoint": "Remove Waypoint"
+        },
+        "controls": {
+            "dragRuler": "Token Drag Ruler",
+            "pathfinding": "Pathfinding"
+        }
+    }
+}

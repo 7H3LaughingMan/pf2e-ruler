@@ -1,0 +1,49 @@
+{
+    "id": "pf2e-ruler",
+    "title": "PF2e Ruler",
+    "description": "This module allows you to display a ruler when dragging a token that will show you how far you've moved that token.",
+    "version": "6.0.0-alpha.1",
+    "authors": [
+        {
+            "name": "7H3LaughingMan",
+            "discord": "7h3laughingman",
+            "url": "https://github.com/7H3LaughingMan"
+        }
+    ],
+    "url": "",
+    "manifest": "",
+    "download": "",
+    "license": "",
+    "readme": "",
+    "bugs": "",
+    "changelog": "",
+    "esmodules": [
+        "scripts/module.js"
+    ],
+    "relationships": {
+        "systems": [
+            {
+                "id": "pf2e",
+                "type": "system",
+                "manifest": "https://github.com/foundryvtt/pf2e/releases/latest/download/system.json",
+                "compatibility": {
+                    "minimum": "6.0.1"
+                }
+            }
+        ],
+        "requires": [
+            {
+                "id": "lib-wrapper",
+                "type": "module",
+                "manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json"
+            }
+        ]
+    },
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        }
+    ]
+}

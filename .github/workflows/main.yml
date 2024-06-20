@@ -29,7 +29,7 @@ jobs:
           download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
 
       - name: Create Module Archive
-        run: zip --recurse-paths ./module.zip module.json README.md LICENSE scripts/ lang/
+        run: zip --recurse-paths ./module.zip module.json README.md LICENSE scripts/ languages/
 
       - name: Update Release With Files
         id: create_version_release

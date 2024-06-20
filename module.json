@@ -48,7 +48,7 @@
         {
             "lang": "en",
             "name": "English",
-            "path": "lang/en.json"
+            "path": "languages/en.json"
         }
     ]
 }

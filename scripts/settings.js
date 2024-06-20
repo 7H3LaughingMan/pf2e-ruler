@@ -16,7 +16,7 @@ export function registerSettings() {
         scope: "world",
         config: true,
         type: Number,
-        default: 1,
+        default: 2,
         choices: {
             0: "pf2e-ruler.settings.showGMRuler.choices.all",
             1: "pf2e-ruler.settings.showGMRuler.choices.neutral",

@@ -1,3 +1,9 @@
+# 6.0.0-alpha.5
+
+Don't show token speed highlighting unless the user is an observer of the token.
+However, there is a setting to show token speed highlighting for any token's owned by a player. So if the token belongs to a player they will see the token speed highlighting even if they aren't an observer.
+Added a setting to hide a GM's ruler based on the token's disposition. By default it's set to only show the GM's ruler if the token is friendly to the party.
+
 # 6.0.0-alpha.4
 
 Allow adjusting the color of the different categories for speed highlighting.

@@ -1,3 +1,8 @@
+# 6.0.0-alpha.4
+
+Allow adjusting the color of the different categories for speed highlighting.
+Wrap the built-in ruler instead of extending it.
+
 # 6.0.0-alpha.3
 
 Added token speed highlighting! This is very basic and you can't change the colors, and it will display all four stride actions for every token.

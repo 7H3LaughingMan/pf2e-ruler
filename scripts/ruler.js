@@ -4,6 +4,7 @@ import { getTokenDistances, getTokenSpeed } from "./token.js";
 export function wrapRuler() {
     libWrapper.register(MODULE_ID, "Ruler.prototype._highlightMeasurementSegment", highlightMeasurementSegment, "MIXED");
     libWrapper.register(MODULE_ID, "Ruler.prototype._computeDistance", computeDistance, "MIXED");
+    libWrapper.register(MODULE_ID, "Ruler.prototype.update", update, "MIXED");
 }
 
 function highlightMeasurementSegment(wrapped, segment) {
@@ -13,6 +14,13 @@ function highlightMeasurementSegment(wrapped, segment) {
     if (!token) {
         wrapped(segment);
     } else {
+        if (!token.document.testUserPermission(game.user, "OBSERVER")) {
+            if (!(token.document.hasPlayerOwner && game.settings.get(MODULE_ID, "showPlayerSpeeds"))) {
+                wrapped(segment);
+                return;
+            }
+        }
+
         const tokenSpeed = getTokenSpeed(token);
         const tokenDistances = getTokenDistances(token);
         const startingDistance = segment.cumulativeDistance - segment.distance;
@@ -52,4 +60,20 @@ function computeDistance(wrapped) {
         segment.cumulativeCost = this.totalCost;
         segment.directPath = directPath;
     }
+}
+
+const TOKEN_DISPOSITION = [-2, 0, 1, 2];
+function update(wrapped, data) {
+    if(!data)
+        return wrapped(data);
+
+    if(data.token && this.user.isGM && !game.user.isGM) {
+        const token = canvas.tokens.get(data.token);
+        const showGMRuler = game.settings.get(MODULE_ID, "showGMRuler");
+
+        if(token.document.disposition < TOKEN_DISPOSITION[showGMRuler])
+            return;
+    }
+
+    wrapped(data);
 }

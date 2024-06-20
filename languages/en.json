@@ -2,6 +2,20 @@
     "pf2e-ruler": {
         "deleteMovementHistory": "Delete Movement History",
         "settings": {
+            "showPlayerSpeeds": {
+                "name": "Show Player Speeds",
+                "hint": "If enabled, any player owned token will have it's speed highlighted even if a user doesn't have observer permission for that actor."
+            },
+            "showGMRuler": {
+                "name": "Show GM Ruler",
+                "hint": "The ruler for GMs will be shown based on a token's disposition.",
+                "choices": {
+                    "all": "Show All",
+                    "neutral": "Show Friendly/Neutral",
+                    "friendly": "Show Friendly",
+                    "none": "Show None"
+                }
+            },
             "singleAction": "Single Action",
             "doubleAction": "Double Action",
             "tripleAction": "Triple Action",

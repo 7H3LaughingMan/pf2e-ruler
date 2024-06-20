@@ -12,8 +12,8 @@ Hooks.once("init", () => {
 
 Hooks.on("getCombatTrackerEntryContext", function (html, menu) {
     const entry = {
-        name: "drag-ruler.resetMovementHistory",
-        icon: '<i class="fas fa-undo-alt"></i>'
+        name: "pf2e-ruler.deleteMovementHistory",
+        icon: '<i class="fas fa-eraser"></i>'
     };
     menu.splice(1, 0, entry);
 });

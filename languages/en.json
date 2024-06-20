@@ -1,5 +1,6 @@
 {
     "pf2e-ruler": {
+        "deleteMovementHistory": "Delete Movement History",
         "settings": {
             "singleAction": "Single Action",
             "doubleAction": "Double Action",

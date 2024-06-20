@@ -7,6 +7,33 @@ export function wrapTokenDrag() {
     libWrapper.register(MODULE_ID, "Token.prototype._onDragLeftCancel", onDragLeftCancel, "MIXED");
 }
 
+export function getTokenDistances(token) {
+    let tokenSpeed = token.actor.system.attributes.speed;
+
+    return [
+        {
+            distance: tokenSpeed.total,
+            color: Color.from("#3222C7")
+        },
+        {
+            distance: tokenSpeed.total * 2,
+            color: Color.from("#FFEC07")
+        },
+        {
+            distance: tokenSpeed.total * 3,
+            color: Color.from("#C033E0")
+        },
+        {
+            distance: tokenSpeed.total * 4,
+            color: Color.from("#1BCAD8")
+        },
+        {
+            distance: Number.POSITIVE_INFINITY,
+            color: Color.from("#FF0000")
+        },
+    ]
+}
+
 function onDragLeftStart(wrapped, event) {
     wrapped(event);
 

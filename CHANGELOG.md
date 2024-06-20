@@ -1,3 +1,7 @@
+# 6.0.0-alpha.3
+
+Added token speed highlighting! This is very basic and you can't change the colors, and it will display all four stride actions for every token.
+
 # 6.0.0-alpha.2
 
 Make sure we include the languages folder!

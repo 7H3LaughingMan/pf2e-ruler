@@ -7,6 +7,7 @@ export function wrapRuler() {
     libWrapper.register(MODULE_ID, "Ruler.prototype.update", update, "MIXED");
     libWrapper.register(MODULE_ID, "Ruler.prototype._getMeasurementHistory", getMeasurementHistory, "MIXED");
     libWrapper.register(MODULE_ID, "Ruler.prototype._postMove", postMove, "MIXED");
+    libWrapper.register(MODULE_ID, "Ruler.prototype._canMove", canMove, "MIXED");
 }
 
 function highlightMeasurementSegment(wrapped, segment) {
@@ -92,4 +93,11 @@ async function postMove(wrapped, token) {
     if (token.document.inCombat && game.combat.started && game.settings.get(MODULE_ID, "enableMovementHistory")) {
         token.document.combatant.setFlag(MODULE_ID, "movementHistory", this._createMeasurementHistory());
     }
+}
+
+function canMove(wrapped, token) {
+    if (game.user.isGM)
+        return true;
+
+    return wrapped(token);
 }

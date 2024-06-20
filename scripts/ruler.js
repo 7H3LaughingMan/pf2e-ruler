@@ -5,6 +5,8 @@ export function wrapRuler() {
     libWrapper.register(MODULE_ID, "Ruler.prototype._highlightMeasurementSegment", highlightMeasurementSegment, "MIXED");
     libWrapper.register(MODULE_ID, "Ruler.prototype._computeDistance", computeDistance, "MIXED");
     libWrapper.register(MODULE_ID, "Ruler.prototype.update", update, "MIXED");
+    libWrapper.register(MODULE_ID, "Ruler.prototype._getMeasurementHistory", getMeasurementHistory, "MIXED");
+    libWrapper.register(MODULE_ID, "Ruler.prototype._postMove", postMove, "MIXED");
 }
 
 function highlightMeasurementSegment(wrapped, segment) {
@@ -64,16 +66,30 @@ function computeDistance(wrapped) {
 
 const TOKEN_DISPOSITION = [-2, 0, 1, 2];
 function update(wrapped, data) {
-    if(!data)
+    if (!data)
         return wrapped(data);
 
-    if(data.token && this.user.isGM && !game.user.isGM) {
+    if (data.token && this.user.isGM && !game.user.isGM) {
         const token = canvas.tokens.get(data.token);
         const showGMRuler = game.settings.get(MODULE_ID, "showGMRuler");
 
-        if(token.document.disposition < TOKEN_DISPOSITION[showGMRuler])
+        if (token.document.disposition < TOKEN_DISPOSITION[showGMRuler])
             return;
     }
 
     wrapped(data);
+}
+
+function getMeasurementHistory(wrapped) {
+    const token = this.token;
+
+    if (token && token.document.inCombat && game.combat.started && game.settings.get(MODULE_ID, "enableMovementHistory")) {
+        return token.document.combatant.getFlag(MODULE_ID, "movementHistory");
+    }
+}
+
+async function postMove(wrapped, token) {
+    if (token.document.inCombat && game.combat.started && game.settings.get(MODULE_ID, "enableMovementHistory")) {
+        token.document.combatant.setFlag(MODULE_ID, "movementHistory", this._createMeasurementHistory());
+    }
 }

@@ -25,6 +25,15 @@ export function registerSettings() {
         }
     });
 
+    game.settings.register(MODULE_ID, "enableMovementHistory", {
+        name: "pf2e-ruler.settings.enableMovementHistory.name",
+        hint: "pf2e-ruler.settings.enableMovementHistory.hint",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+
     game.settings.register(MODULE_ID, "singleAction", {
         name: "pf2e-ruler.settings.singleAction",
         scope: "client",

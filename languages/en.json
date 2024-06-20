@@ -2,6 +2,10 @@
     "pf2e-ruler": {
         "deleteMovementHistory": "Delete Movement History",
         "settings": {
+            "enableMovementHistory": {
+                "name": "Enable Combat Movement History",
+                "hint": "If enabled, PF2e Ruler will remember the path a token took during it's turn in combat."
+            },
             "showPlayerSpeeds": {
                 "name": "Show Player Speeds",
                 "hint": "If enabled, any player owned token will have it's speed highlighted even if a user doesn't have observer permission for that actor."

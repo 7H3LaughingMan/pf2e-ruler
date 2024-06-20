@@ -1,12 +1,19 @@
 import { registerSettings } from "./settings.js";
 import { registerKeybindings } from "./keybindings.js";
-import { wrapTokenDrag } from "./token.js";
-import { RulerPF2e } from "./ruler.js";
+import { wrapToken } from "./token.js";
+import { wrapRuler } from "./ruler.js";
 
 Hooks.once("init", () => {
-    CONFIG.Canvas.rulerClass = RulerPF2e;
-
     registerSettings();
     registerKeybindings();
-    wrapTokenDrag();
+    wrapToken();
+    wrapRuler();
+});
+
+Hooks.on("getCombatTrackerEntryContext", function (html, menu) {
+    const entry = {
+        name: "drag-ruler.resetMovementHistory",
+        icon: '<i class="fas fa-undo-alt"></i>'
+    };
+    menu.splice(1, 0, entry);
 });

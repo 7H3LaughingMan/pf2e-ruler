@@ -1,5 +1,5 @@
 import { MODULE_ID } from "./const.js";
-import { getTokenDistances } from "./token.js";
+import { getTokenDistances, getTokenSpeed } from "./token.js";
 
 export function wrapRuler() {
     libWrapper.register(MODULE_ID, "Ruler.prototype._highlightMeasurementSegment", highlightMeasurementSegment, "MIXED");
@@ -13,15 +13,17 @@ function highlightMeasurementSegment(wrapped, segment) {
     if (!token) {
         wrapped(segment);
     } else {
-        const distances = getTokenDistances(token);
+        const tokenSpeed = getTokenSpeed(token);
+        const tokenDistances = getTokenDistances(token);
         const startingDistance = segment.cumulativeDistance - segment.distance;
 
         for (const pathPoint of segment.directPath) {
             const pathDistance = startingDistance + pathPoint.distance;
-            const distanceIndex = distances.findIndex((x) => x.distance >= pathDistance);
+            const tokenDistance = tokenDistances.find((x) => tokenSpeed * x.multiplier >= pathDistance);
+            const distanceColor = Color.from(game.settings.get(MODULE_ID, tokenDistance.name));
 
             const { x: x1, y: y1 } = canvas.grid.getTopLeftPoint(pathPoint);
-            canvas.interface.grid.highlightPosition(this.name, { x: x1, y: y1, color: distances[distanceIndex].color });
+            canvas.interface.grid.highlightPosition(this.name, { x: x1, y: y1, color: distanceColor });
         }
     }
 }

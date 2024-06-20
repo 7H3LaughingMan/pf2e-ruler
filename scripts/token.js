@@ -7,31 +7,39 @@ export function wrapToken() {
     libWrapper.register(MODULE_ID, "Token.prototype._onDragLeftCancel", onDragLeftCancel, "WRAPPER");
 }
 
-export function getTokenDistances(token) {
-    let tokenSpeed = token.actor.system.attributes.speed;
+const actionCategories = [
+    {
+        name: "singleAction",
+        multiplier: 1
+    },
+    {
+        name: "doubleAction",
+        multiplier: 2
+    },
+    {
+        name: "tripleAction",
+        multiplier: 3
+    },
+    {
+        name: "quadrupleAction",
+        multiplier: 4
+    }
+];
 
-    return [
-        {
-            distance: tokenSpeed.total,
-            color: Color.from("#3222C7")
-        },
-        {
-            distance: tokenSpeed.total * 2,
-            color: Color.from("#FFEC07")
-        },
-        {
-            distance: tokenSpeed.total * 3,
-            color: Color.from("#C033E0")
-        },
-        {
-            distance: tokenSpeed.total * 4,
-            color: Color.from("#1BCAD8")
-        },
-        {
-            distance: Number.POSITIVE_INFINITY,
-            color: Color.from("#FF0000")
-        },
-    ]
+const unreachableCategory = {
+    name: "unreachable",
+    multiplier: Number.POSITIVE_INFINITY
+};
+
+export function getTokenSpeed(token) {
+    return token.actor.system.attributes.speed.total;
+}
+
+export function getTokenDistances(token) {
+    let tokenDistances = [...actionCategories];
+    tokenDistances.push(unreachableCategory);
+
+    return tokenDistances;
 }
 
 function onDragLeftStart(wrapped, event) {

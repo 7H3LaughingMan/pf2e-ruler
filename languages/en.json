@@ -1,7 +1,11 @@
 {
     "pf2e-ruler": {
         "settings": {
-            
+            "singleAction": "Single Action",
+            "doubleAction": "Double Action",
+            "tripleAction": "Triple Action",
+            "quadrupleAction": "Quadruple Action",
+            "unreachable": "Unreachable"
         },
         "keybindings": {
             "addWaypoint": "Add Waypoint",

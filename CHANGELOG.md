@@ -1,3 +1,7 @@
+# 6.0.0-alpha.6
+
+- Forgot to include styles!
+
 # 6.0.0-alpha.5
 
 - Don't show token speed highlighting unless the user is an observer of the token.

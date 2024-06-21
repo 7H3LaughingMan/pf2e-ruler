@@ -18,7 +18,6 @@ Hooks.on("getCombatTrackerEntryContext", function (html, menu) {
             icon: '<i class="fas fa-eraser"></i>',
             condition: li => {
               const combatant = game.combat.combatants.get(li.data("combatant-id"));
-              console.log(combatant);
               return combatant?.getFlag(MODULE_ID, "movementHistory");
             },
             callback: li => {

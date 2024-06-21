@@ -1,3 +1,7 @@
+# 6.0.0
+
+- Initial Public Release!
+
 # 6.0.0-rc.3
 
 - Added a setting to control when to highlight a token's speed. Always, Combat Only, or Never.

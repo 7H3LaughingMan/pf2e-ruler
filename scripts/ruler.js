@@ -26,11 +26,9 @@ function highlightMeasurementSegment(wrapped, segment) {
 
         const tokenSpeed = getTokenSpeed(token);
         const tokenDistances = getTokenDistances(token);
-        const startingDistance = segment.cumulativeDistance - segment.distance;
 
         for (const pathPoint of segment.directPath) {
-            const pathDistance = startingDistance + pathPoint.distance;
-            const tokenDistance = tokenDistances.find((x) => tokenSpeed * x.multiplier >= pathDistance);
+            const tokenDistance = tokenDistances.find((x) => tokenSpeed * x.multiplier >= pathPoint.distance);
             const distanceColor = Color.from(game.settings.get(MODULE_ID, tokenDistance.name));
 
             const { x: x1, y: y1 } = canvas.grid.getTopLeftPoint(pathPoint);
@@ -40,28 +38,45 @@ function highlightMeasurementSegment(wrapped, segment) {
 }
 
 function computeDistance(wrapped) {
+    let path = [];
+    if (this.segments.length) path.push(this.segments[0].ray.A);
+    for (const segment of this.segments) {
+        const { x, y } = segment.ray.B;
+        path.push({ x, y, teleport: segment.teleport });
+    }
+    const directPath = canvas.grid.getDirectPath(path);
+    const directPathCenters = Array.from(directPath, (x) => canvas.grid.getCenterPoint(x));
+
+    const measurements = canvas.grid.measurePath(path, { cost: this._getCostFunction() });
+    const directPathMeasurements = canvas.grid.measurePath(directPathCenters, { cost: this._getCostFunction() });
+
+    let measuredPath = [];
+    for (let i = 0; i < directPath.length; i++) {
+        measuredPath.push({
+            i: directPath[i].i,
+            j: directPath[i].j,
+            distance: directPathMeasurements.waypoints[i].distance,
+            cost: directPathMeasurements.waypoints[i].cost
+        })
+    }
+
     this.totalDistance = 0;
     this.totalCost = 0;
-
+    let pathIndex = 0
     for (let i = 0; i < this.segments.length; i++) {
         const segment = this.segments[i];
-        let directPath = canvas.grid.getDirectPath([segment.ray.A, segment.ray.B]);
-        const measurements = canvas.grid.measurePath(Array.from(directPath, (x) => canvas.grid.getCenterPoint(x)), { cost: this._getCostFunction() });
-
-        for (let j = 0; j < directPath.length; j++) {
-            directPath[j].distance = measurements.waypoints[j].distance;
-            directPath[j].cost = measurements.waypoints[j].cost;
-        }
-
-        const distance = measurements.distance;
-        const cost = segment.history ? this.history[i + 1].cost : measurements.cost;
+        const distance = measurements.segments[i].distance;
+        const cost = measurements.segments[i].cost;
         this.totalDistance += distance;
         this.totalCost += cost;
         segment.distance = distance;
         segment.cost = cost;
         segment.cumulativeDistance = this.totalDistance;
         segment.cumulativeCost = this.totalCost;
-        segment.directPath = directPath;
+
+        const spaces = measurements.segments[i].spaces;
+        segment.directPath = measuredPath.slice(pathIndex, pathIndex + spaces + 1);
+        pathIndex += spaces;
     }
 }
 

@@ -1,6 +1,6 @@
 {
     "pf2e-ruler": {
-        "deleteMovementHistory": "Delete Movement History",
+        "clearMovementHistory": "Clear Movement History",
         "settings": {
             "enableMovementHistory": {
                 "name": "Enable Combat Movement History",

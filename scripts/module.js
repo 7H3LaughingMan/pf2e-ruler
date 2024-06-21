@@ -14,7 +14,7 @@ Hooks.once("init", () => {
 Hooks.on("getCombatTrackerEntryContext", function (html, menu) {
     if (game.settings.get(MODULE_ID, "enableMovementHistory")) {
         const entry = {
-            name: "pf2e-ruler.deleteMovementHistory",
+            name: "pf2e-ruler.clearMovementHistory",
             icon: '<i class="fas fa-eraser"></i>',
             condition: li => {
               const combatant = game.combat.combatants.get(li.data("combatant-id"));

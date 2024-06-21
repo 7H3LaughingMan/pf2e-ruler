@@ -4,4 +4,6 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z6ZHDNA)
 
-This module will automatically show a ruler when draggins a token to inform you how far you've dragged it from the token's starting point.
+This module will automatically show a ruler when dragging a token to inform you how far you've dragged it from the token's starting point. Additionally, if you're using a grid, the spaces will be colored depending on your token's speed. 
+
+![PF2e Ruler - Square Grid](https://raw.githubusercontent.com/7H3LaughingMan/pf2e-ruler/main/media/basic_token_movement.webp)

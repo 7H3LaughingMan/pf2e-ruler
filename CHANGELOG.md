@@ -2,11 +2,11 @@
 
 - Added a setting to control when to highlight a token's speed. Always, Combat Only, or Never.
 - Limit available actions to tokens based on conditions.
- - If a token is Immobilized, Paralyzed, Petrified, or Unconcious they will have no actions.
- - If a token is a minion their base number of actions is 2, everything else has a base number actions of 3.
- - If a token is quickened their base number of actions is increated by 1.
- - If a token is stunned/slowed it will reduce their number of actions by the greater of the two. This only applies when the token is in combat. This is also compatible with PF2'e Workbench auto-reduction of the stunned condition at the start of a token's turn.
- - There is a setting to disable the reduction of actions based on the stunned/slowed condition in combat.
+  - If a token is Immobilized, Paralyzed, Petrified, or Unconcious they will have no actions.
+  - If a token is a minion their base number of actions is 2, everything else has a base number actions of 3.
+  - If a token is quickened their base number of actions is increated by 1.
+  - If a token is stunned/slowed it will reduce their number of actions by the greater of the two. This only applies when the token is in combat. This is also compatible with PF2'e Workbench auto-reduction of the stunned condition at the start of a token's turn.
+  - There is a setting to disable the reduction of actions based on the stunned/slowed condition in combat.
 
 # 6.0.0-rc.2
 

@@ -1,3 +1,7 @@
+# 6.0.0-rc.2
+
+- Fixed a problem with the ruler not calculating distances properly.
+
 # 6.0.0-rc.1
 
 - Added combat movement tracking, at the start of a token's turn it will clear their movement history. To delete a token's movement history manually right-click on it in the encounter tracker. You will only see the option to delete a token's movement history if the token has a movement history.

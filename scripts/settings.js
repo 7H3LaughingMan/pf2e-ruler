@@ -34,6 +34,20 @@ export function registerSettings() {
         default: true
     });
 
+    game.settings.register(MODULE_ID, "tokenHighlighting", {
+        name: "pf2e-ruler.settings.tokenHighlighting.name",
+        hint: "pf2e-ruler.settings.tokenHighlighting.hint",
+        scope: "client",
+        config: true,
+        type: Number,
+        default: 1,
+        choices: {
+            0: "pf2e-ruler.settings.tokenHighlighting.choices.never",
+            1: "pf2e-ruler.settings.tokenHighlighting.choices.combat",
+            2: "pf2e-ruler.settings.tokenHighlighting.choices.always"
+        }
+    });
+
     game.settings.register(MODULE_ID, "singleAction", {
         name: "pf2e-ruler.settings.singleAction",
         scope: "client",

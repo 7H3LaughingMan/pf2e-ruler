@@ -2,6 +2,15 @@
     "pf2e-ruler": {
         "clearMovementHistory": "Clear Movement History",
         "settings": {
+            "tokenHighlighting": {
+                "name": "Use Token Speed Highlighting",
+                "hint": "When using the ruler, when do you want it to highlight a token's speed.",
+                "choices": {
+                    "never": "Never",
+                    "combat": "Combat Only",
+                    "always": "Always"
+                }
+            },
             "enableMovementHistory": {
                 "name": "Enable Combat Movement History",
                 "hint": "If enabled, PF2e Ruler will remember the path a token took during it's turn in combat."

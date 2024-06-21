@@ -14,23 +14,45 @@ function highlightMeasurementSegment(wrapped, segment) {
     if (segment.teleport) return;
     const token = this.token;
 
+    // Make sure there is a token associated with this ruler for Token Speed Highlighting
     if (!token) {
         wrapped(segment);
     } else {
+        // If Token Speed Highlighting is set to Never, then don't bother
+        if (game.settings.get(MODULE_ID, "tokenHighlighting") == 0) {
+            wrapped(segment);
+            return;
+        }
+
+        // Verify that the user has Observer status of the token
         if (!token.document.testUserPermission(game.user, "OBSERVER")) {
+            // If they don't, check to see if Show Player Speeds is enabled and the token is owned by the player
             if (!(token.document.hasPlayerOwner && game.settings.get(MODULE_ID, "showPlayerSpeeds"))) {
                 wrapped(segment);
                 return;
             }
         }
 
+        // Check to see if Token Speed Highlighting is set to Combat Only
+        if (game.settings.get(MODULE_ID, "tokenHighlighting") == 1) {
+            // Check to see if the token is in combat and if the combat has started
+            if (!token.document.inCombat && !game.combat?.started) {
+                wrapped(segment);
+                return;
+            }
+        }
+
+        // Get the token's speed and the distances for each available action
         const tokenSpeed = getTokenSpeed(token);
         const tokenDistances = getTokenDistances(token);
 
+        // Iterate through each square/hex on the grid
         for (const pathPoint of segment.directPath) {
+            // Determine what color this square/hex should be based on the distance it took for the token to get here
             const tokenDistance = tokenDistances.find((x) => tokenSpeed * x.multiplier >= pathPoint.distance);
             const distanceColor = Color.from(game.settings.get(MODULE_ID, tokenDistance.name));
 
+            // Highlight the square/hex
             const { x: x1, y: y1 } = canvas.grid.getTopLeftPoint(pathPoint);
             canvas.interface.grid.highlightPosition(this.name, { x: x1, y: y1, color: distanceColor });
         }

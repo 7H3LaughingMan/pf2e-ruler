@@ -48,6 +48,15 @@ export function registerSettings() {
         }
     });
 
+    game.settings.register(MODULE_ID, "limitActions", {
+        name: "pf2e-ruler.settings.limitActions.name",
+        hint: "pf2e-ruler.settings.limitActions.hint",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
+
     game.settings.register(MODULE_ID, "singleAction", {
         name: "pf2e-ruler.settings.singleAction",
         scope: "client",

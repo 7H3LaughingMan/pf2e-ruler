@@ -11,6 +11,10 @@
                     "always": "Always"
                 }
             },
+            "limitActions": {
+                "name": "Limit Actions",
+                "hint": "This will limit the number of actions available to a token for movement if they are slowed/stunned."
+            },
             "enableMovementHistory": {
                 "name": "Enable Combat Movement History",
                 "hint": "If enabled, PF2e Ruler will remember the path a token took during it's turn in combat."

@@ -1,4 +1,5 @@
 import { MODULE_ID } from "./const.js";
+import { getActionCount } from "./actions.js";
 
 export function wrapToken() {
     libWrapper.register(MODULE_ID, "Token.prototype._onDragLeftStart", onDragLeftStart, "WRAPPER");
@@ -36,7 +37,9 @@ export function getTokenSpeed(token) {
 }
 
 export function getTokenDistances(token) {
-    let tokenDistances = [...actionCategories];
+    const tokenActions = getActionCount(token);
+
+    let tokenDistances = actionCategories.slice(0, tokenActions);
     tokenDistances.push(unreachableCategory);
 
     return tokenDistances;

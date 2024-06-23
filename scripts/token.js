@@ -49,7 +49,9 @@ function onDragLeftStart(wrapped, event) {
     wrapped(event);
 
     if (game.settings.get(MODULE_ID, "enableDragRuler")) {
-        canvas.controls.ruler._onDragStart(event, { isTokenDrag: true });
+        if (canvas.tokens.controlled.length == 1) {
+            canvas.controls.ruler._onDragStart(event, { isTokenDrag: true });
+        }
     }
 }
 

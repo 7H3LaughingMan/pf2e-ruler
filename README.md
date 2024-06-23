@@ -1,6 +1,8 @@
 # PF2e Token Drag Ruler
 
-![GitHub Release](https://img.shields.io/github/v/release/7H3LaughingMan/pf2e-ruler?include_prereleases)![GitHub Release Date](https://img.shields.io/github/release-date-pre/7H3LaughingMan/pf2e-ruler)![GitHub commits since latest release](https://img.shields.io/github/commits-since/7H3LaughingMan/pf2e-ruler/latest?include_prereleases)
+![GitHub Release](https://img.shields.io/github/v/release/7H3LaughingMan/pf2e-ruler) ![GitHub Release Date](https://img.shields.io/github/release-date/7H3LaughingMan/pf2e-ruler) ![GitHub commits since latest release](https://img.shields.io/github/commits-since/7H3LaughingMan/pf2e-ruler/latest)
+
+![GitHub Downloads (specific asset, all releases)](https://img.shields.io/github/downloads/7H3LaughingMan/pf2e-ruler/module.zip) ![GitHub Downloads (specific asset, latest release)](https://img.shields.io/github/downloads/7H3LaughingMan/pf2e-ruler/latest/module.zip) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fpf2e-ruler&query=package.installs&suffix=%25&label=Forge%20Installs)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z6ZHDNA)
 

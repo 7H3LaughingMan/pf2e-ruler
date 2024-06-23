@@ -1,3 +1,9 @@
+# 6.1.0
+
+- Renamed from PF2e Ruler to PF2e Token Drag Ruler
+- Added scene control which can be used to toggle the drag ruler on or off
+- If multiple tokes are selected the drag ruler will not be created
+
 # 6.0.0
 
 - Initial Public Release!

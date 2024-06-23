@@ -1,6 +1,13 @@
 import { MODULE_ID } from "./const.js";
 
 export function registerSettings() {
+    game.settings.register(MODULE_ID, "enableDragRuler", {
+        scope: "client",
+        config: false,
+        type: Boolean,
+        default: true
+    });
+
     game.settings.register(MODULE_ID, "showPlayerSpeeds", {
         name: "pf2e-ruler.settings.showPlayerSpeeds.name",
         hint: "pf2e-ruler.settings.showPlayerSpeeds.hint",

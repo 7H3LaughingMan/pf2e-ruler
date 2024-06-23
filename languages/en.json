@@ -42,6 +42,9 @@
         "keybindings": {
             "addWaypoint": "Add Waypoint",
             "removeWaypoint": "Remove Waypoint"
+        },
+        "controls": {
+            "dragRuler": "Token Drag Ruler"
         }
     }
 }

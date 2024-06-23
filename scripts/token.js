@@ -48,32 +48,42 @@ export function getTokenDistances(token) {
 function onDragLeftStart(wrapped, event) {
     wrapped(event);
 
-    canvas.controls.ruler._onDragStart(event, { isTokenDrag: true });
+    if (game.settings.get(MODULE_ID, "enableDragRuler")) {
+        canvas.controls.ruler._onDragStart(event, { isTokenDrag: true });
+    }
 }
 
 function onDragLeftMove(wrapped, event) {
     wrapped(event);
 
-    const ruler = canvas.controls.ruler;
-    if (ruler._state > 0) ruler._onMouseMove(event);
+    if (game.settings.get(MODULE_ID, "enableDragRuler")) {
+        const ruler = canvas.controls.ruler;
+        if (ruler._state > 0) ruler._onMouseMove(event);
+    }
 }
 
 async function onDragLeftDrop(wrapped, event) {
-    const ruler = canvas.controls.ruler;
-    if (!ruler.active) return wrapped(event);
-    const destination = event.interactionData.destination;
+    if (game.settings.get(MODULE_ID, "enableDragRuler")) {
+        const ruler = canvas.controls.ruler;
+        if (!ruler.active) return wrapped(event);
+        const destination = event.interactionData.destination;
 
-    if (!canvas.dimensions.rect.contains(destination.x, destination.y)) {
-        ruler._onMouseUp(event);
-        return false;
+        if (!canvas.dimensions.rect.contains(destination.x, destination.y)) {
+            ruler._onMouseUp(event);
+            return false;
+        }
+
+        ruler._onMoveKeyDown(event);
+    } else {
+        wrapped(event);
     }
-
-    ruler._onMoveKeyDown(event);
 }
 
 function onDragLeftCancel(wrapped, event) {
     wrapped(event);
 
-    const ruler = canvas.controls.ruler;
-    if (ruler._state !== Ruler.STATES.MOVING) ruler._onMouseUp(event);
+    if (game.settings.get(MODULE_ID, "enableDragRuler")) {
+        const ruler = canvas.controls.ruler;
+        if (ruler._state !== Ruler.STATES.MOVING) ruler._onMouseUp(event);
+    }
 }

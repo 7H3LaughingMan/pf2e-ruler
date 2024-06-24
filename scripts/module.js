@@ -2,14 +2,37 @@ import { MODULE_ID } from "./const.js";
 import { registerSettings } from "./settings.js";
 import { registerKeybindings } from "./keybindings.js";
 import { wrapToken } from "./token.js";
-import { wrapRuler } from "./ruler.js";
+import { DragRulerLayer } from "./dragRulerLayer.js";
 
 Hooks.once("init", () => {
+    CONFIG.Canvas.layers["dragRuler"] = {
+        layerClass: DragRulerLayer,
+        group: "interface"
+    };
+
     registerSettings();
     registerKeybindings();
     wrapToken();
-    wrapRuler();
 });
+
+Hooks.once("ready", () => {
+    game.socket.on(`module.${MODULE_ID}`, (request, userId) => {
+        const user = game.users.get(userId);
+        if (!user || user.isSelf) return;
+
+        if (!user.active || (user.viewedScene != canvas.id)) {
+            canvas.dragRuler.getRulerForUser(userId).update(null);
+            return;
+        }
+
+        switch (request.type) {
+            case "RULER":
+                canvas.dragRuler.getRulerForUser(userId).update(request.payload);
+                break;
+        }
+    });
+});
+
 
 Hooks.on("getSceneControlButtons", function (controls) {
     controls[0].tools.splice(3, 0, {

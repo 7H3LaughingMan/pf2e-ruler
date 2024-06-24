@@ -45,12 +45,80 @@ export function getTokenDistances(token) {
     return tokenDistances;
 }
 
+export function getTokenShape(token) {
+    const occupiedSpaces = getOccupiedSpaces(token);
+
+    let centerPoint = token.getCenterPoint();
+    let centerOffset = canvas.grid.getOffset(centerPoint);
+
+    if (occupiedSpaces.length % 2 == 0) {
+        const centerOffsets = occupiedSpaces.map((space) => {
+            const centerSpace = canvas.grid.getCenterPoint(space);
+            const distance = Math.hypot(centerPoint.x - centerSpace.x, centerPoint.y - centerSpace.y);
+            return { i: space.i, j: space.j, distance };
+        }).sort((a, b) => a.distance - b.distance).slice(0, ((canvas.grid.isSquare) ? 4 : 3));
+
+        const topLeft = centerOffsets.map((space) => {
+            const centerSpace = canvas.grid.getCenterPoint(space);
+            const distance = Math.hypot(0 - centerSpace.x, 0 - centerSpace.y);
+            return { i: space.i, j: space.j, distance };
+        }).sort((a, b) => a.distance - b.distance)[0];
+
+        centerPoint = canvas.grid.getCenterPoint(topLeft);
+        centerOffset = { i: topLeft.i, j: topLeft.j };
+    }
+
+    return {
+        centerOffset: { x: centerPoint.x - token.x, y: centerPoint.y - token.y },
+        spaces: occupiedSpaces.map((space) => {
+            return { i: space.i - centerOffset.i, j: space.j - centerOffset.j };
+        })
+    };
+};
+
+export function getOccupiedSpaces(token) {
+    const grid = canvas.grid;
+    const { x: ox, y: oy } = token.document;
+    const shape = token.shape;
+    const bounds = shape.getBounds();
+    bounds.x += ox;
+    bounds.y += oy;
+    bounds.fit(canvas.dimensions.rect);
+
+    // Identify grid space that have their center points covered by the template shape
+    const positions = [];
+    const [i0, j0, i1, j1] = grid.getOffsetRange(bounds);
+    for (let i = i0; i < i1; i++) {
+        for (let j = j0; j < j1; j++) {
+            const offset = { i, j };
+            const { x: cx, y: cy } = grid.getCenterPoint(offset);
+
+            // If the origin of the template is a grid space center, this grid space is highlighted
+            let covered = (Math.max(Math.abs(cx - ox), Math.abs(cy - oy)) < 1);
+            if (!covered) {
+                for (let dx = -0.5; dx <= 0.5; dx += 0.5) {
+                    for (let dy = -0.5; dy <= 0.5; dy += 0.5) {
+                        if (shape.contains(cx - ox + dx, cy - oy + dy)) {
+                            covered = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!covered) continue;
+            positions.push(offset);
+        }
+    }
+
+    return positions;
+}
+
 function onDragLeftStart(wrapped, event) {
     wrapped(event);
 
     if (game.settings.get(MODULE_ID, "enableDragRuler")) {
         if (canvas.tokens.controlled.length == 1) {
-            canvas.controls.ruler._onDragStart(event, { isTokenDrag: true });
+            canvas.dragRuler.ruler._onDragLeftStart(event);
         }
     }
 }
@@ -59,23 +127,13 @@ function onDragLeftMove(wrapped, event) {
     wrapped(event);
 
     if (game.settings.get(MODULE_ID, "enableDragRuler")) {
-        const ruler = canvas.controls.ruler;
-        if (ruler._state > 0) ruler._onMouseMove(event);
+        canvas.dragRuler.ruler._onDragLeftMove(event);
     }
 }
 
 async function onDragLeftDrop(wrapped, event) {
-    if (game.settings.get(MODULE_ID, "enableDragRuler")) {
-        const ruler = canvas.controls.ruler;
-        if (!ruler.active) return wrapped(event);
-        const destination = event.interactionData.destination;
-
-        if (!canvas.dimensions.rect.contains(destination.x, destination.y)) {
-            ruler._onMouseUp(event);
-            return false;
-        }
-
-        ruler._onMoveKeyDown(event);
+    if (game.settings.get(MODULE_ID, "enableDragRuler") || !canvas.dragRuler.ruler.active) {
+        canvas.dragRuler.ruler._onDragLeftDrop(event);
     } else {
         wrapped(event);
     }
@@ -85,7 +143,6 @@ function onDragLeftCancel(wrapped, event) {
     wrapped(event);
 
     if (game.settings.get(MODULE_ID, "enableDragRuler")) {
-        const ruler = canvas.controls.ruler;
-        if (ruler._state !== Ruler.STATES.MOVING) ruler._onMouseUp(event);
+        canvas.dragRuler.ruler._onDragLeftCancel(event);
     }
 }

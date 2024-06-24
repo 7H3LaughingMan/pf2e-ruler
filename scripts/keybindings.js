@@ -26,8 +26,7 @@ export function registerKeybindings() {
 
 let MOVE_TIME = 0;
 function toggleTokenRulerWaypoint(context, add = true) {
-    const position = canvas.mousePosition;
-    const ruler = canvas.controls.ruler;
+    const ruler = canvas.dragRuler.ruler;
     if (!canvas.tokens.active || !ruler || !ruler.active) return;
 
     const now = Date.now();
@@ -35,6 +34,6 @@ function toggleTokenRulerWaypoint(context, add = true) {
     if (delta < 100) return true;
     MOVE_TIME = now;
 
-    if (add) ruler._addWaypoint(position);
-    else if (ruler.waypoints.length > 1) ruler._removeWaypoint(position);
+    if (add) ruler._addWaypoint(ruler.destination, { snap: false });
+    else if (ruler.waypoints.length > 1) ruler._removeWaypoint();
 }

@@ -22,6 +22,7 @@
     "readme": "https://github.com/7H3LaughingMan/pf2e-ruler/blob/main/README.md",
     "bugs": "https://github.com/7H3LaughingMan/pf2e-ruler/issues",
     "changelog": "https://github.com/7H3LaughingMan/pf2e-ruler/blob/main/CHANGELOG.md",
+    "socket": true,
     "esmodules": [
         "scripts/module.js"
     ],

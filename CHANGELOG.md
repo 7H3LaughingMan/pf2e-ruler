@@ -1,7 +1,7 @@
 # 6.3.0
 
 - Added the ability to right-click to either Add Waypoints, Remove Waypoints, or cancel the Drag Ruler.
-- Added a new keybinding that allows you to cancel the drag ruler via Escape, this can't be editted.
+- Added a new key binding that allows you to cancel the drag ruler via Escape, this can't be edited.
 - Changed the default key/mouse bindings
   - Space -> Add Waypoint
   - Right-Click -> Remove Waypoint

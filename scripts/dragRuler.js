@@ -197,6 +197,6 @@ export class DragRuler extends Ruler {
         if (!this.active) return;
         if (this.token) this.token.document.locked = this.token.document._source.locked;
         this._endMeasurement();
-        canvas.mouseInteractionManager.cancel(event);
+        canvas.mouseInteractionManager.cancel();
     }
 }

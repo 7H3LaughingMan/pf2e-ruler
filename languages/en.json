@@ -41,6 +41,7 @@
         },
         "keybindings": {
             "addWaypoint": "Add Waypoint",
+            "cancelDrag": "Cancel Drag Ruler",
             "removeWaypoint": "Remove Waypoint"
         },
         "controls": {

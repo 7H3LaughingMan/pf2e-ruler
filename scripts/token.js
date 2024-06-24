@@ -45,6 +45,29 @@ export function getTokenDistances(token) {
     return tokenDistances;
 }
 
+export function compareTokenSpaces(oldTokenSpaces, newTokenSpaces)
+{
+    const newSpaces = [];
+
+    for (const newSpace of newTokenSpaces) {
+        if(!oldTokenSpaces.some((oldSpace) => oldSpace.i == newSpace.i && oldSpace.j == newSpace.i)) {
+            newSpaces.push(newSpace);
+        }
+    }
+
+    return newSpaces;
+}
+
+export function getTokenSpaces(offset, tokenShape) {
+    const tokenSpaces = [];
+
+    for (const space of tokenShape.spaces) {
+        tokenSpaces.push({ i: offset.i + space.i, j: offset.j + space.j });
+    }
+
+    return tokenSpaces;
+};
+
 export function getTokenShape(token) {
     const occupiedSpaces = getOccupiedSpaces(token);
 

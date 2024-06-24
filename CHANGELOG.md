@@ -1,3 +1,8 @@
+# 6.2.0
+
+- Created a custom DragRuler class, now this module won't interfere with the built-in ruler
+- Prevent possible multiple instances of the drag ruler, if another one of your instances is moving a token and you attempt to move another token it will default back to the regular token dragging.
+
 # 6.1.0
 
 - Renamed from PF2e Ruler to PF2e Token Drag Ruler

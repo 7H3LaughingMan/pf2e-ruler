@@ -116,7 +116,7 @@ export function getOccupiedSpaces(token) {
 function onDragLeftStart(wrapped, event) {
     wrapped(event);
 
-    if (game.settings.get(MODULE_ID, "enableDragRuler")) {
+    if (game.settings.get(MODULE_ID, "enableDragRuler") && canvas.dragRuler.ruler.state === Ruler.STATES.INACTIVE) {
         if (canvas.tokens.controlled.length == 1) {
             canvas.dragRuler.ruler._onDragLeftStart(event);
         }
@@ -126,13 +126,13 @@ function onDragLeftStart(wrapped, event) {
 function onDragLeftMove(wrapped, event) {
     wrapped(event);
 
-    if (game.settings.get(MODULE_ID, "enableDragRuler")) {
+    if (game.settings.get(MODULE_ID, "enableDragRuler") && canvas.dragRuler.ruler.state === Ruler.STATES.MEASURING) {
         canvas.dragRuler.ruler._onDragLeftMove(event);
     }
 }
 
 async function onDragLeftDrop(wrapped, event) {
-    if (game.settings.get(MODULE_ID, "enableDragRuler") || !canvas.dragRuler.ruler.active) {
+    if (game.settings.get(MODULE_ID, "enableDragRuler") && canvas.dragRuler.ruler.state === Ruler.STATES.MEASURING) {
         canvas.dragRuler.ruler._onDragLeftDrop(event);
     } else {
         wrapped(event);
@@ -142,7 +142,7 @@ async function onDragLeftDrop(wrapped, event) {
 function onDragLeftCancel(wrapped, event) {
     wrapped(event);
 
-    if (game.settings.get(MODULE_ID, "enableDragRuler")) {
+    if (game.settings.get(MODULE_ID, "enableDragRuler") && canvas.dragRuler.ruler.state === Ruler.STATES.MEASURING) {
         canvas.dragRuler.ruler._onDragLeftCancel(event);
     }
 }

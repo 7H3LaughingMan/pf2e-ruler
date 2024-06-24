@@ -8,7 +8,7 @@ export function registerKeybindings() {
                 key: "Escape"
             }
         ],
-        onDown: cancelDrag,
+        onDown: context => canvas.dragRuler.ruler.cancelDrag(),
         precedence: CONST.KEYBINDING_PRECEDENCE.PRIORITY
     });
 
@@ -30,35 +30,17 @@ export function registerKeybindings() {
     });
 }
 
-function cancelDrag() {
-    if (game.settings.get(MODULE_ID, "enableDragRuler") && canvas.dragRuler.ruler.state === Ruler.STATES.MEASURING) {
-        const event = {
-            preventDefaults: () => {
-                return;
-            }
-        };
-
-        const token = canvas.dragRuler.ruler.token;
-        canvas.dragRuler.ruler._endMeasurement();
-
-        token.mouseInteractionManager.cancel(event);
-        token._onDragLeftCancel(event);
-        return true;
-    }
-
-    return false;
-};
-
 let MOVE_TIME = 0;
 function toggleTokenRulerWaypoint(context, add = true) {
     const ruler = canvas.dragRuler.ruler;
-    if (!canvas.tokens.active || !ruler || !ruler.active) return;
+    if (!canvas.tokens.active || !ruler || !ruler.active) return false;
 
     const now = Date.now();
     const delta = now - MOVE_TIME;
-    if (delta < 100) return true;
+    if (delta < 100) return false;
     MOVE_TIME = now;
 
     if (add) ruler._addWaypoint(ruler.destination, { snap: false });
     else if (ruler.waypoints.length > 1) ruler._removeWaypoint();
+    return true;
 }

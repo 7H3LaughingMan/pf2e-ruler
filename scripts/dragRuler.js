@@ -160,6 +160,26 @@ export class DragRuler extends Ruler {
         super.update(data);
     }
 
+    cancelDrag() {
+        if (game.settings.get(MODULE_ID, "enableDragRuler") && this.state === Ruler.STATES.MEASURING) {
+            const event = {
+                preventDefaults: () => {
+                    return;
+                }
+            };
+
+            const token = this.token;
+            this._endMeasurement();
+
+            token.mouseInteractionManager.cancel(event);
+            token._onDragLeftCancel(event);
+
+            return true;
+        }
+
+        return false;
+    };
+
     _onDragLeftStart(event) {
         const token = event.interactionData.object;
         this.#tokenShape = getTokenShape(token);
@@ -194,9 +214,20 @@ export class DragRuler extends Ruler {
     }
 
     _onDragLeftCancel(event) {
-        if (!this.active) return;
-        if (this.token) this.token.document.locked = this.token.document._source.locked;
-        this._endMeasurement();
-        canvas.mouseInteractionManager.cancel();
+        const rightClickAction = game.settings.get(MODULE_ID, "rightClickAction");
+
+        switch (rightClickAction) {
+            case 0:
+                event.preventDefault();
+                this._addWaypoint(this.destination, { snap: !event.shiftKey });
+                break;
+            case 1:
+                event.preventDefault();
+                if (this.waypoints.length > 1) this._removeWaypoint();
+                break;
+            case 2:
+                this.cancelDrag();
+                break;
+        }
     }
 }

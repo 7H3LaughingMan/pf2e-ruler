@@ -8,6 +8,20 @@ export function registerSettings() {
         default: true
     });
 
+    game.settings.register(MODULE_ID, "rightClickAction", {
+        name: "pf2e-ruler.settings.rightClickAction.name",
+        hint: "pf2e-ruler.settings.rightClickAction.hint",
+        scope: "client",
+        config: true,
+        type: Number,
+        default: 1,
+        choices: {
+            0: "pf2e-ruler.settings.rightClickAction.choices.add",
+            1: "pf2e-ruler.settings.rightClickAction.choices.remove",
+            2: "pf2e-ruler.settings.rightClickAction.choices.cancel"
+        }
+    });
+
     game.settings.register(MODULE_ID, "showPlayerSpeeds", {
         name: "pf2e-ruler.settings.showPlayerSpeeds.name",
         hint: "pf2e-ruler.settings.showPlayerSpeeds.hint",
@@ -37,6 +51,7 @@ export function registerSettings() {
         hint: "pf2e-ruler.settings.enableMovementHistory.hint",
         scope: "world",
         config: true,
+        requireReload: true,
         type: Boolean,
         default: true
     });

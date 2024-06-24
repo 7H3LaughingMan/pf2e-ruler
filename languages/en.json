@@ -2,6 +2,15 @@
     "pf2e-ruler": {
         "clearMovementHistory": "Clear Movement History",
         "settings": {
+            "rightClickAction": {
+                "name": "Right Click Action",
+                "hint": "What action should be performed when right-clicking while dragging a token?",
+                "choices": {
+                    "add": "Add Waypoint",
+                    "remove": "Remove Waypoint",
+                    "cancel": "Cancel Drag Ruler"
+                }
+            },
             "tokenHighlighting": {
                 "name": "Use Token Speed Highlighting",
                 "hint": "When using the ruler, when do you want it to highlight a token's speed.",

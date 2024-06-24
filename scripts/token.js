@@ -5,7 +5,7 @@ export function wrapToken() {
     libWrapper.register(MODULE_ID, "Token.prototype._onDragLeftStart", onDragLeftStart, "WRAPPER");
     libWrapper.register(MODULE_ID, "Token.prototype._onDragLeftMove", onDragLeftMove, "WRAPPER");
     libWrapper.register(MODULE_ID, "Token.prototype._onDragLeftDrop", onDragLeftDrop, "MIXED");
-    libWrapper.register(MODULE_ID, "Token.prototype._onDragLeftCancel", onDragLeftCancel, "WRAPPER");
+    libWrapper.register(MODULE_ID, "Token.prototype._onDragLeftCancel", onDragLeftCancel, "MIXED");
 }
 
 const actionCategories = [
@@ -45,12 +45,11 @@ export function getTokenDistances(token) {
     return tokenDistances;
 }
 
-export function compareTokenSpaces(oldTokenSpaces, newTokenSpaces)
-{
+export function compareTokenSpaces(oldTokenSpaces, newTokenSpaces) {
     const newSpaces = [];
 
     for (const newSpace of newTokenSpaces) {
-        if(!oldTokenSpaces.some((oldSpace) => oldSpace.i == newSpace.i && oldSpace.j == newSpace.i)) {
+        if (!oldTokenSpaces.some((oldSpace) => oldSpace.i == newSpace.i && oldSpace.j == newSpace.i)) {
             newSpaces.push(newSpace);
         }
     }
@@ -163,9 +162,9 @@ async function onDragLeftDrop(wrapped, event) {
 }
 
 function onDragLeftCancel(wrapped, event) {
-    wrapped(event);
-
     if (game.settings.get(MODULE_ID, "enableDragRuler") && canvas.dragRuler.ruler.state === Ruler.STATES.MEASURING) {
         canvas.dragRuler.ruler._onDragLeftCancel(event);
+    } else {
+        wrapped(event);
     }
 }

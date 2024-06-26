@@ -1,3 +1,11 @@
+# 6.4.0
+
+- Completly detatched Drag Ruler from Foundry's Ruler.
+- Added the ability to "teleport" tokens by holding Ctrl. Any distance travelled while teleporting does not count as movement.
+- Added the ability to skip the movement animation by holding Alt.
+- Reworked how the direct path for a segment is calculated.
+- Fixed a bug that prevent players from moving their token in combat if the GM moved their token through a wall.
+
 # 6.3.0
 
 - Added the ability to right-click to either Add Waypoints, Remove Waypoints, or cancel the Drag Ruler.

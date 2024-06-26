@@ -68,7 +68,10 @@ export function getTokenSpaces(offset, tokenShape) {
 };
 
 export function getTokenShape(token) {
+    if (canvas.grid.isGridless) return { centerOffset: { x: 0, y: 0 } };
+
     const occupiedSpaces = getOccupiedSpaces(token);
+    const oldCenterPoint = token.getCenterPoint();
 
     let centerPoint = token.getCenterPoint();
     let centerOffset = canvas.grid.getOffset(centerPoint);
@@ -91,10 +94,7 @@ export function getTokenShape(token) {
     }
 
     return {
-        centerOffset: { x: centerPoint.x - token.x, y: centerPoint.y - token.y },
-        spaces: occupiedSpaces.map((space) => {
-            return { i: space.i - centerOffset.i, j: space.j - centerOffset.j };
-        })
+        centerOffset: { x: oldCenterPoint.x - centerPoint.x, y: oldCenterPoint.y - centerPoint.y },
     };
 };
 

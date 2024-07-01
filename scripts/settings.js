@@ -8,6 +8,13 @@ export function registerSettings() {
         default: true
     });
 
+    game.settings.register(MODULE_ID, "enablePathfinding", {
+        scope: "client",
+        config: false,
+        type: Boolean,
+        default: true
+    });
+
     game.settings.register(MODULE_ID, "rightClickAction", {
         name: "pf2e-ruler.settings.rightClickAction.name",
         hint: "pf2e-ruler.settings.rightClickAction.hint",

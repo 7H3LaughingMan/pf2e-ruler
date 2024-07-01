@@ -3,6 +3,7 @@ import { registerSettings } from "./settings.js";
 import { registerKeybindings } from "./keybindings.js";
 import { wrapToken } from "./token.js";
 import { DragRulerLayer } from "./dragRulerLayer.js";
+import { getAStarPath } from "./pathfinding.js";
 
 Hooks.once("init", () => {
     CONFIG.Canvas.layers["dragRuler"] = {
@@ -13,6 +14,10 @@ Hooks.once("init", () => {
     registerSettings();
     registerKeybindings();
     wrapToken();
+
+    window.dragRuler = {
+        getAStarPath
+    };
 });
 
 Hooks.once("ready", () => {
@@ -33,9 +38,8 @@ Hooks.once("ready", () => {
     });
 });
 
-
 Hooks.on("getSceneControlButtons", function (controls) {
-    controls[0].tools.splice(3, 0, {
+    const DRAGRULER_CONTROL = {
         name: "dragRuler",
         title: "pf2e-ruler.controls.dragRuler",
         icon: "fa-solid fa-compass-drafting",
@@ -44,7 +48,20 @@ Hooks.on("getSceneControlButtons", function (controls) {
         onClick: active => {
             game.settings.set(MODULE_ID, "enableDragRuler", active);
         }
-    });
+    };
+
+    const PATHFINDING_CONTROL = {
+        name: "pathfinding",
+        title: "pf2e-ruler.controls.pathfinding",
+        icon: "fa-solid fa-route",
+        toggle: true,
+        active: game.settings.get(MODULE_ID, "enablePathfinding"),
+        onClick: active => {
+            game.settings.set(MODULE_ID, "enablePathfinding", active);
+        }
+    };
+
+    controls[0].tools.splice(3, 0, DRAGRULER_CONTROL, PATHFINDING_CONTROL);
 });
 
 Hooks.on("getCombatTrackerEntryContext", function (html, menu) {

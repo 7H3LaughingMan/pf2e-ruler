@@ -54,7 +54,8 @@
             "removeWaypoint": "Remove Waypoint"
         },
         "controls": {
-            "dragRuler": "Token Drag Ruler"
+            "dragRuler": "Token Drag Ruler",
+            "pathfinding": "Pathfinding"
         }
     }
 }

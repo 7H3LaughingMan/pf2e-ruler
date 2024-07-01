@@ -1,5 +1,6 @@
 import { MODULE_ID } from "./const.js";
 import { getTokenShape, getTokenDistances, getTokenSpeed } from "./token.js";
+import { getAStarPath } from "./pathfinding.js";
 
 const TOKEN_DISPOSITION = [-2, 0, 1, 2];
 
@@ -128,6 +129,19 @@ export class DragRuler extends PIXI.Container {
     _getMeasurementSegments() {
         const segments = [];
         const path = this.history.concat(this.waypoints.concat([this.destination]));
+
+        if(game.settings.get(MODULE_ID, "enablePathfinding")) {
+            const end = path.pop();
+            const start = path.pop();
+            const foundPath = getAStarPath(start, end);
+
+            if(foundPath.length != 0) {
+                path.push(start, ...foundPath);
+            } else {
+                path.push(start, end);
+            }
+        }
+
         for (let i = 1; i < path.length; i++) {
             const label = this.labels.children.at(i - 1) ?? this.labels.addChild(new PreciseText("", CONFIG.canvasTextStyle));
             const history = i < this.history.length;

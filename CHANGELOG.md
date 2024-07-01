@@ -1,3 +1,9 @@
+# 6.5.0
+
+- Added basic pathfinding, this only works for that last segment of movement. Please note that this will freeze up Foundry when calculating a path, for shorter distances this probably won't be noticeable but for longer distances that are complex it will be noticeable.
+- Fixed an issue where if you switch between snapping and non-snapping it would prevent the token from going back to a snapped position.
+- Fixed an issue where if a token is inbetween grid spaces it would think the token didn't take up any grid spaces, in these cases it now thinks the token takes up the grid located at the center of the token.
+
 # 6.4.0
 
 - Completly detatched Drag Ruler from Foundry's Ruler.

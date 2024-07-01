@@ -76,6 +76,12 @@ export function getTokenShape(token) {
     let centerPoint = token.getCenterPoint();
     let centerOffset = canvas.grid.getOffset(centerPoint);
 
+    if (occupiedSpaces.length == 0) {
+        return {
+            centerOffset: { x: oldCenterPoint.x - centerPoint.x, y: oldCenterPoint.y - centerPoint.y },
+        };
+    }
+
     if (occupiedSpaces.length % 2 == 0) {
         const centerOffsets = occupiedSpaces.map((space) => {
             const centerSpace = canvas.grid.getCenterPoint(space);

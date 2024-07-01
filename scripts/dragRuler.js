@@ -33,6 +33,8 @@ export class DragRuler extends PIXI.Container {
         return this.waypoints.at(0) ?? null;
     }
 
+    path = [];
+
     waypoints = [];
 
     segments = [];
@@ -80,6 +82,7 @@ export class DragRuler extends PIXI.Container {
         this.#token = null;
         this.#tokenShape = null;
         this.destination = null;
+        this.path = [];
         this.waypoints = [];
         this.segments = [];
         this.#history = [];
@@ -129,18 +132,26 @@ export class DragRuler extends PIXI.Container {
 
     _getMeasurementSegments() {
         const segments = [];
-        const path = this.history.concat(this.waypoints.concat([this.destination]));
+        const path = [];
 
-        if(game.settings.get(MODULE_ID, "enablePathfinding")) {
-            const end = path.pop();
-            const start = path.pop();
-            const foundPath = getAStarPath(start, end);
+        if(this.user !== game.user) {
+            path.push(...this.path);
+        } else {
+            path.push(...this.history, ...this.waypoints, this.destination);
 
-            if(foundPath.length != 0) {
-                path.push(start, ...foundPath);
-            } else {
-                path.push(start, end);
+            if(game.settings.get(MODULE_ID, "enablePathfinding")) {
+                const end = path.pop();
+                const start = path.pop();
+                const foundPath = getAStarPath(start, end);
+    
+                if(foundPath.length != 0) {
+                    path.push(start, ...foundPath);
+                } else {
+                    path.push(start, end);
+                }
             }
+
+            this.path = path;
         }
 
         for (let i = 1; i < path.length; i++) {
@@ -553,6 +564,7 @@ export class DragRuler extends PIXI.Container {
             token: this.token?.id ?? null,
             tokenShape: this.tokenShape ?? null,
             history: this.history,
+            path: this.path,
             waypoints: this.waypoints,
             destination: this.destination
         });
@@ -573,6 +585,7 @@ export class DragRuler extends PIXI.Container {
         this.#token = canvas.tokens.get(data.token) ?? null;
         this.#tokenShape = data.tokenShape;
         this.#history = data.history;
+        this.path = data.path;
         this.waypoints = data.waypoints;
         this.measure(data.destination, { snap: false, force: true });
     }

@@ -1,3 +1,8 @@
+# 6.5.1
+
+- Fix an issue where pathfinding was being run on each individual client.
+- Disabled pathfinding by default.
+
 # 6.5.0
 
 - Added basic pathfinding, this only works for that last segment of movement. Please note that this will freeze up Foundry when calculating a path, for shorter distances this probably won't be noticeable but for longer distances that are complex it will be noticeable.

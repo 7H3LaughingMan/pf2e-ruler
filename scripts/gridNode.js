@@ -17,9 +17,27 @@ export class GridNode {
     }
 
     distanceTo(endNode) {
-        var a = this.centerPoint.x - endNode.centerPoint.x;
-        var b = this.centerPoint.y - endNode.centerPoint.y;
+        if (canvas.grid.isSquare) {
+            const di = Math.abs(this.offset.i - endNode.offset.i);
+            const dj = Math.abs(this.offset.j - endNode.offset.j);
 
+            const ns = Math.abs(di - dj);
+            const nd = Math.min(di, dj);
+            const cd = (this.diagonals & 1) ? ((nd + 1 & -2) + (nd >> 1)) : ((nd & -2) + ((nd + 1) >> 1));
+
+            return (ns + cd) * canvas.grid.distance;
+        }
+
+        if (canvas.grid.isHexagonal) {
+            const c0 = canvas.grid.offsetToCube(this.offset);
+            const c1 = canvas.grid.offsetToCube(endNode.offset);
+            const cd = foundry.grid.HexagonalGrid.cubeDistance(c0, c1);
+
+            return cd * canvas.grid.distance;
+        }
+
+        const a = this.centerPoint.x - endNode.centerPoint.x;
+        const b = this.centerPoint.y - endNode.centerPoint.y;
         return Math.hypot(a, b);
     }
 

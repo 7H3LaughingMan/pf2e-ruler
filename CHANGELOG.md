@@ -1,3 +1,9 @@
+# 6.5.2
+
+- Made some slight improvements to pathfinding
+  - Always assume we are using 5-10-5 diagonal rules when calulating g
+  - When calculating h get the actual distance to the end in grid units, also assume we are using 5-10-5 diagonal rules
+
 # 6.5.1
 
 - Fix an issue where pathfinding was being run on each individual client.

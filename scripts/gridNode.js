@@ -25,19 +25,9 @@ export class GridNode {
 
     getCost(fromNeighbor) {
         if (canvas.grid.isSquare) {
-            let k;
-            if ((fromNeighbor.offset.i === this.offset.i) || (fromNeighbor.offset.j === this.offset.j)) k = 1;
-            else {
-                switch (canvas.grid.diagonals) {
-                    case CONST.GRID_DIAGONALS.EQUIDISTANT: k = 1; break;
-                    case CONST.GRID_DIAGONALS.EXACT: k = Math.SQRT2; break;
-                    case CONST.GRID_DIAGONALS.APPROXIMATE: k = 1.5; break;
-                    case CONST.GRID_DIAGONALS.RECTILINEAR: k = 2; break;
-                    case CONST.GRID_DIAGONALS.ALTERNATING_1: k = fromNeighbor.diagonals & 1 ? 2 : 1; break;
-                    case CONST.GRID_DIAGONALS.ALTERNATING_2: k = fromNeighbor.diagonals & 1 ? 1 : 2; break;
-                }
-            }
-
+            const k = ((fromNeighbor.offset.i == this.offset.i) || (fromNeighbor.offset.j == this.offset.j))
+                ? 1
+                : ((fromNeighbor.diagonals & 1) ? 2 : 1);
             return k * canvas.grid.distance;
         }
 

@@ -5,6 +5,11 @@ export class TokenShape {
         const centerPoint = token.getCenterPoint();
         this.centerPointOffset = { x: centerPoint.x - token.document.x, y: centerPoint.y - token.document.y };
 
+        if (this.occupiedSpaces.length == 0) {
+            this.snappedOffset = this.centerPointOffset;
+            return;
+        }
+
         if (this.occupiedSpaces.length % ((canvas.grid.isSquare) ? 2 : 3) == 0) {
             const centerSpaces = this.occupiedSpaces.map((space) => {
                 return {

@@ -1,6 +1,7 @@
 import { MODULE_ID } from "./const.js";
-import { getTokenShape, getTokenDistances, getTokenSpeed } from "./token.js";
+import { getTokenDistances, getTokenSpeed } from "./token.js";
 import { getAStarPath } from "./pathfinding.js";
+import { TokenShape } from "./tokenShape.js";
 
 const TOKEN_DISPOSITION = [-2, 0, 1, 2];
 
@@ -98,7 +99,7 @@ export class DragRuler extends PIXI.Container {
         if (this.state !== Ruler.STATES.MEASURING) return;
 
         // Compute the measurement destination, segments, and distance
-        const d = this._getMeasurement(destination, { snap });
+        const d = (force) ? destination : this._getMeasurement(destination, { snap });
         if (this.destination && (d.x === this.destination.x) && (d.y === this.destination.y) && !force) return;
         this.destination = d;
         this.segments = this._getMeasurementSegments();
@@ -118,33 +119,34 @@ export class DragRuler extends PIXI.Container {
     }
 
     _getMeasurement(point, { snap = true } = {}) {
-        if (snap) {
-            if (canvas.grid.isGridless) return point;
-
+        if (snap && !canvas.grid.isGridless) {
             return canvas.grid.getCenterPoint({
-                x: point.x + this.tokenShape.centerOffset.x,
-                y: point.y + this.tokenShape.centerOffset.y
+                x: point.x + this.tokenShape.snappedOffset.x,
+                y: point.y + this.tokenShape.snappedOffset.y
             });
         }
 
-        return point;
+        return {
+            x: point.x + this.tokenShape.centerPointOffset.x,
+            y: point.y + this.tokenShape.centerPointOffset.y
+        }
     }
 
     _getMeasurementSegments() {
         const segments = [];
         const path = [];
 
-        if(this.user !== game.user) {
+        if (this.user !== game.user) {
             path.push(...this.path);
         } else {
             path.push(...this.history, ...this.waypoints, this.destination);
 
-            if(game.settings.get(MODULE_ID, "enablePathfinding")) {
+            if (game.settings.get(MODULE_ID, "enablePathfinding")) {
                 const end = path.pop();
                 const start = path.pop();
                 const foundPath = getAStarPath(start, end);
-    
-                if(foundPath.length != 0) {
+
+                if (foundPath.length != 0) {
                     path.push(start, ...foundPath);
                 } else {
                     path.push(start, end);
@@ -162,6 +164,7 @@ export class DragRuler extends PIXI.Container {
             segments.push({
                 ray,
                 teleport: path[i].teleport ? true : first && (i > 0) && (ray.distance > 0),
+                snap: path[i].snap ?? false,
                 label,
                 diagonals: 0,
                 distance: 0,
@@ -186,9 +189,9 @@ export class DragRuler extends PIXI.Container {
         this.clear();
         this._state = Ruler.STATES.STARTING;
         this.#token = token;
-        this.#tokenShape = getTokenShape(token);
+        this.#tokenShape = new TokenShape(token);
         this.#history = this._getMeasurementHistory() ?? [];
-        this._addWaypoint(origin, { snap });
+        this._addWaypoint(this._getMeasurement(origin, { snap }), { snap });
         canvas.hud.token.clear();
     }
 
@@ -200,9 +203,12 @@ export class DragRuler extends PIXI.Container {
 
     _addWaypoint(point, { snap = true, teleport = false } = {}) {
         if ((this.state !== Ruler.STATES.STARTING) && (this.state !== Ruler.STATES.MEASURING)) return;
-        const waypoint = this._getMeasurement(point, { snap });
-        waypoint.snap = snap;
-        waypoint.teleport = teleport;
+        const waypoint = {
+            x: point.x,
+            y: point.y,
+            snap,
+            teleport
+        };
         this.waypoints.push(waypoint);
         this._state = Ruler.STATES.MEASURING;
         this.measure(this.destination ?? point, { snap, force: true });
@@ -299,7 +305,7 @@ export class DragRuler extends PIXI.Container {
         }
 
         const units = canvas.grid.units;
-        
+
         let label = "";
 
         if (segment.teleport) label += "(";
@@ -440,17 +446,15 @@ export class DragRuler extends PIXI.Container {
         } else {
             const destination = this.segments.at(-1).ray.B;
 
-            const dx = token.getCenterPoint().x - token.document.x;
-            const dy = token.getCenterPoint().y - token.document.y;
+            let dx = this.tokenShape.centerPointOffset.x;
+            let dy = this.tokenShape.centerPointOffset.y;
 
-            if (destination.snap) {
-                if (!canvas.grid.isGridless) {
-                    dx += this.tokenShape.centerOffset.x;
-                    dy += this.tokenShape.centerOffset.y;
-                }
+            if (destination.snap && !canvas.grid.isGridless) {
+                dx = this.tokenShape.snappedOffset.x;
+                dy = this.tokenShape.snappedOffset.y;
             }
 
-            const adjustedDestination = { x: Math.round(destination.x + dx), y: Math.round(destination.y + dy) };
+            const adjustedDestination = { x: Math.round(destination.x - dx), y: Math.round(destination.y - dy) };
 
             await token.document.update(adjustedDestination, { teleport: true });
         }
@@ -492,47 +496,33 @@ export class DragRuler extends PIXI.Container {
     async _animateMovement(token) {
         const wasPaused = game.paused;
 
-        // Determine offset of the initial origin relative to the snapped Token's top-left.
-        // This is important to position the token relative to the ruler origin for non-1x1 tokens.
-        const origin = this.segments[this.history.length].ray.A;
-        const dx = token.getCenterPoint().x - token.document.x;
-        const dy = token.getCenterPoint().y - token.document.y;
-
-        // Iterate over each measured segment
-        let priorDest = undefined;
         for (const segment of this.segments) {
             if (segment.history || (segment.ray.distance === 0)) continue;
-            const r = segment.ray;
-            const { x, y } = token.document._source;
 
-            // Break the movement if the game is paused
             if (!wasPaused && game.paused) break;
 
-            // Break the movement if Token is no longer located at the prior destination (some other change override this)
-            if (priorDest && ((x !== priorDest.x) || (y !== priorDest.y))) break;
-
-            // Commit the movement and update the final resolved destination coordinates
-            const adjustedDestination = { x: Math.round(r.B.x - dx), y: Math.round(r.B.y - dy) };
-            await this._animateSegment(token, segment, adjustedDestination);
-            priorDest = adjustedDestination;
+            await this._animateSegment(token, segment);
         }
     }
 
-    async _animateSegment(token, segment, destination) {
+    async _animateSegment(token, segment) {
         let name;
         if (segment.animation?.name === undefined) name = token.animationName;
         else name ||= Symbol(token.animationName);
         const { x, y } = token.document._source;
 
-        if (segment.snap) {
-            if (!canvas.grid.isGridless) {
-                destination.x = destination.x + this.tokenShape.centerOffset.x;
-                destination.y = destination.y + this.tokenShape.centerOffset.y;
-            }
+        let dx = this.tokenShape.centerPointOffset.x;
+        let dy = this.tokenShape.centerPointOffset.y;
+
+        if (segment.snap && !canvas.grid.isGridless) {
+            dx = this.tokenShape.snappedOffset.x;
+            dy = this.tokenShape.snappedOffset.y;
         }
 
+        const adjustedDestination = { x: Math.round(segment.ray.B.x - dx), y: Math.round(segment.ray.B.y - dy) };
+
         await token.animate({ x, y }, { name, duration: 0 });
-        await token.document.update(destination, { teleport: segment.teleport, animation: { ...segment.animation, name } });
+        await token.document.update(adjustedDestination, { teleport: segment.teleport, animation: { ...segment.animation, name } });
         await CanvasAnimation.getAnimation(name)?.promise;
     }
 
@@ -612,18 +602,18 @@ export class DragRuler extends PIXI.Container {
 
     _onDragLeftStart(event) {
         const token = event.interactionData.object;
-        const centerPoint = token.getCenterPoint();
+        const { x, y } = token.document;
 
-        this._startMeasurement(centerPoint, { snap: !event.shiftKey, token: token });
+        this._startMeasurement({ x, y }, { snap: !event.shiftKey, token: token });
         if (this.token && (this.state === Ruler.STATES.MEASURING)) this.token.document.locked = true;
     }
 
     _onDragLeftMove(event) {
         const token = event.interactionData.clones[0];
-        const centerPoint = token.getCenterPoint();
+        const { x, y } = token.document;
 
-        if (!canvas.dimensions.rect.contains(centerPoint.x, centerPoint.y)) return;
-        this.measure(centerPoint, { snap: !event.shiftKey, teleport: event.ctrlKey });
+        if (!canvas.dimensions.rect.contains(x, y)) return;
+        this.measure({ x, y }, { snap: !event.shiftKey, teleport: event.ctrlKey });
     }
 
     _onDragLeftDrop(event) {

@@ -1,3 +1,7 @@
+# 6.5.4
+
+- Fix a problem with tiny tokens
+
 # 6.5.3
 
 - Reworked how the center grid is calculated for tokens that take up more than one square

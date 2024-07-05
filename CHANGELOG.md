@@ -1,7 +1,7 @@
 # 6.5.3
 
 - Reworked how the center grid is calculated for tokens that take up more than one square
-- When starting, ending, or adding a waypoing it should always use the "center grid" when snapping is enabled
+- When starting, ending, or adding a waypoint it should always use the "center grid" when snapping is enabled
 
 # 6.5.2
 

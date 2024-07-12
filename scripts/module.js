@@ -3,7 +3,7 @@ import { registerSettings } from "./settings.js";
 import { registerKeybindings } from "./keybindings.js";
 import { wrapToken } from "./token.js";
 import { DragRulerLayer } from "./dragRulerLayer.js";
-import { getAStarPath } from "./pathfinding.js";
+import init, { SquareGrid, HexagonalGrid } from "../wasm/pf2e-astar.js";
 
 Hooks.once("init", () => {
     CONFIG.Canvas.layers["dragRuler"] = {
@@ -15,8 +15,11 @@ Hooks.once("init", () => {
     registerKeybindings();
     wrapToken();
 
+    init();
+
     window.dragRuler = {
-        getAStarPath
+        SquareGrid,
+        HexagonalGrid
     };
 });
 
@@ -61,7 +64,13 @@ Hooks.on("getSceneControlButtons", function (controls) {
         }
     };
 
-    controls[0].tools.splice(3, 0, DRAGRULER_CONTROL, PATHFINDING_CONTROL);
+    if (game.settings.get(MODULE_ID, "playerPathfinding") || game.user.isGM) {
+        controls[0].tools.splice(3, 0, DRAGRULER_CONTROL, PATHFINDING_CONTROL);
+    } else {
+        controls[0].tools.splice(3, 0, DRAGRULER_CONTROL);
+        game.settings.set(MODULE_ID, "enablePathfinding", false)
+    }
+
 });
 
 Hooks.on("getCombatTrackerEntryContext", function (html, menu) {

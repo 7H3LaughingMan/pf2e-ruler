@@ -38,6 +38,16 @@ export function registerSettings() {
         default: true
     });
 
+    game.settings.register(MODULE_ID, "playerPathfinding", {
+        name: "pf2e-ruler.settings.playerPathfinding.name",
+        hint: "pf2e-ruler.settings.playerPathfinding.hint",
+        scope: "world",
+        config: true,
+        requiresReload: true,
+        type: Boolean,
+        default: true
+    });
+
     game.settings.register(MODULE_ID, "showGMRuler", {
         name: "pf2e-ruler.settings.showGMRuler.name",
         hint: "pf2e-ruler.settings.showGMRuler.hint",
@@ -58,7 +68,7 @@ export function registerSettings() {
         hint: "pf2e-ruler.settings.enableMovementHistory.hint",
         scope: "world",
         config: true,
-        requireReload: true,
+        requiresReload: true,
         type: Boolean,
         default: true
     });

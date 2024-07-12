@@ -1,7 +1,7 @@
 import { MODULE_ID } from "./const.js";
 import { getTokenDistances, getTokenSpeed } from "./token.js";
-import { getAStarPath } from "./pathfinding.js";
 import { TokenShape } from "./tokenShape.js";
+import { SquareGrid, HexagonalGrid } from "../wasm/pf2e-astar.js";
 
 const TOKEN_DISPOSITION = [-2, 0, 1, 2];
 
@@ -33,8 +33,6 @@ export class DragRuler extends PIXI.Container {
     get origin() {
         return this.waypoints.at(0) ?? null;
     }
-
-    path = [];
 
     waypoints = [];
 
@@ -78,12 +76,13 @@ export class DragRuler extends PIXI.Container {
 
     #tokenShape = null;
 
+    #grid = null;
+
     clear() {
         this._state = Ruler.STATES.INACTIVE;
         this.#token = null;
         this.#tokenShape = null;
         this.destination = null;
-        this.path = [];
         this.waypoints = [];
         this.segments = [];
         this.#history = [];
@@ -93,18 +92,35 @@ export class DragRuler extends PIXI.Container {
         this.ruler.clear();
         this.labels.removeChildren().forEach(c => c.destroy());
         canvas.interface.grid.clearHighlightLayer(this.name);
+
+        this.#grid = null;
     }
 
-    measure(destination, { snap = true, teleport = false, force = false } = {}) {
+    measure(destination, { snap = true, force = false } = {}) {
         if (this.state !== Ruler.STATES.MEASURING) return;
 
         // Compute the measurement destination, segments, and distance
         const d = (force) ? destination : this._getMeasurement(destination, { snap });
         if (this.destination && (d.x === this.destination.x) && (d.y === this.destination.y) && !force) return;
         this.destination = d;
+
+        if(force) {
+            delete this.destination.path;
+        }
+
+        if (this.user === game.user && game.settings.get(MODULE_ID, "enablePathfinding")) {
+            if (!force && this.#grid !== null) {
+                const start = canvas.grid.getOffset(this.waypoints.at(-1));
+                const end = canvas.grid.getOffset(this.destination);
+                const path = this.#grid.find_path(start, end);
+
+                if (path.length != 0) {
+                    this.destination.path = path;
+                }
+            }
+        }
+
         this.segments = this._getMeasurementSegments();
-        this.segments.at(-1).snap = snap;
-        this.segments.at(-1).teleport = teleport;
         this._computeDistance();
         this._broadcastMeasurement();
 
@@ -120,15 +136,22 @@ export class DragRuler extends PIXI.Container {
 
     _getMeasurement(point, { snap = true } = {}) {
         if (snap && !canvas.grid.isGridless) {
-            return canvas.grid.getCenterPoint({
+            const centerPoint = canvas.grid.getCenterPoint({
                 x: point.x + this.tokenShape.snappedOffset.x,
                 y: point.y + this.tokenShape.snappedOffset.y
             });
+
+            return {
+                x: centerPoint.x,
+                y: centerPoint.y,
+                snap
+            };
         }
 
         return {
             x: point.x + this.tokenShape.centerPointOffset.x,
-            y: point.y + this.tokenShape.centerPointOffset.y
+            y: point.y + this.tokenShape.centerPointOffset.y,
+            snap
         }
     }
 
@@ -136,24 +159,37 @@ export class DragRuler extends PIXI.Container {
         const segments = [];
         const path = [];
 
-        if (this.user !== game.user) {
-            path.push(...this.path);
-        } else {
-            path.push(...this.history, ...this.waypoints, this.destination);
-
-            if (game.settings.get(MODULE_ID, "enablePathfinding")) {
-                const end = path.pop();
-                const start = path.pop();
-                const foundPath = getAStarPath(start, end);
-
-                if (foundPath.length != 0) {
-                    path.push(start, ...foundPath);
+        for (let element of this.history) {
+            if (Object.hasOwn(element, "path")) {
+                if (path.length == 0) {
+                    path.push(...element.path);
                 } else {
-                    path.push(start, end);
+                    const pathAddition = element.path.slice(1);
+                    path.push(...pathAddition);
                 }
+            } else {
+                path.push(element);
             }
+        }
 
-            this.path = path;
+        for (let element of this.waypoints) {
+            if (Object.hasOwn(element, "path")) {
+                if (path.length == 0) {
+                    path.push(...element.path);
+                } else {
+                    const pathAddition = element.path.slice(1);
+                    path.push(...pathAddition);
+                }
+            } else {
+                path.push(element);
+            }
+        }
+
+        if (Object.hasOwn(this.destination, "path")) {
+            const pathAddition = this.destination.path.slice(1);
+            path.push(...pathAddition);
+        } else {
+            path.push(this.destination);
         }
 
         for (let i = 1; i < path.length; i++) {
@@ -163,7 +199,7 @@ export class DragRuler extends PIXI.Container {
             const ray = new Ray(path[i - 1], path[i]);
             segments.push({
                 ray,
-                teleport: path[i].teleport ? true : first && (i > 0) && (ray.distance > 0),
+                teleport: history ? path[i].teleport : first && (i > 0) && (ray.distance > 0),
                 snap: path[i].snap ?? false,
                 label,
                 diagonals: 0,
@@ -188,6 +224,15 @@ export class DragRuler extends PIXI.Container {
         if (this.state !== Ruler.STATES.INACTIVE) return;
         this.clear();
         this._state = Ruler.STATES.STARTING;
+
+        if (canvas.grid.isSquare) {
+            this.#grid = new SquareGrid();
+        }
+
+        if (canvas.grid.isHexagonal) {
+            this.#grid = new HexagonalGrid();
+        }
+
         this.#token = token;
         this.#tokenShape = new TokenShape(token);
         this.#history = this._getMeasurementHistory() ?? [];
@@ -201,14 +246,26 @@ export class DragRuler extends PIXI.Container {
         this._broadcastMeasurement();
     }
 
-    _addWaypoint(point, { snap = true, teleport = false } = {}) {
+    _addWaypoint(point, { snap = true } = {}) {
         if ((this.state !== Ruler.STATES.STARTING) && (this.state !== Ruler.STATES.MEASURING)) return;
         const waypoint = {
             x: point.x,
             y: point.y,
-            snap,
-            teleport
+            snap
         };
+
+        if (this.user === game.user && game.settings.get(MODULE_ID, "enablePathfinding")) {
+            if(this.waypoints.length > 0 && this.#grid !== null) {
+                const start = canvas.grid.getOffset(this.waypoints.at(-1));
+                const end = canvas.grid.getOffset(waypoint);
+                const path = this.#grid.find_path(start, end);
+
+                if (path && path.length >= 2) {
+                    waypoint.path = path;
+                }
+            }
+        }
+
         this.waypoints.push(waypoint);
         this._state = Ruler.STATES.MEASURING;
         this.measure(this.destination ?? point, { snap, force: true });
@@ -295,30 +352,15 @@ export class DragRuler extends PIXI.Container {
     }
 
     _getSegmentLabel(segment) {
-        let cost = segment.cost;
-
-        if (segment.teleport) {
-            const origin = { x: segment.ray.A.x, y: segment.ray.A.y };
-            const destination = { x: segment.ray.B.x, y: segment.ray.B.y };
-
-            cost = canvas.grid.measurePath([origin, destination]).distance;
-        }
-
+        if (segment.teleport) return "";
         const units = canvas.grid.units;
-
-        let label = "";
-
-        if (segment.teleport) label += "(";
-        label += `${Math.round(cost * 100) / 100}`;
+        let label = `${Math.round(segment.cost * 100) / 100}`;
         if (units) label += ` ${units}`;
-        if (segment.teleport) label += ")";
-
         if (segment.last) {
             label += ` [${Math.round(this.totalCost * 100) / 100}`;
             if (units) label += ` ${units}`;
             label += "]";
         }
-
         return label;
     }
 
@@ -554,7 +596,6 @@ export class DragRuler extends PIXI.Container {
             token: this.token?.id ?? null,
             tokenShape: this.tokenShape ?? null,
             history: this.history,
-            path: this.path,
             waypoints: this.waypoints,
             destination: this.destination
         });
@@ -575,7 +616,6 @@ export class DragRuler extends PIXI.Container {
         this.#token = canvas.tokens.get(data.token) ?? null;
         this.#tokenShape = data.tokenShape;
         this.#history = data.history;
-        this.path = data.path;
         this.waypoints = data.waypoints;
         this.measure(data.destination, { snap: false, force: true });
     }
@@ -613,7 +653,7 @@ export class DragRuler extends PIXI.Container {
         const { x, y } = token.document;
 
         if (!canvas.dimensions.rect.contains(x, y)) return;
-        this.measure({ x, y }, { snap: !event.shiftKey, teleport: event.ctrlKey });
+        this.measure({ x, y }, { snap: !event.shiftKey });
     }
 
     _onDragLeftDrop(event) {

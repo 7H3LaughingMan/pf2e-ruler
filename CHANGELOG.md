@@ -3,7 +3,7 @@
 - Improved Pathfinding [pf2e-astar](https://github.com/7H3LaughingMan/pf2e-astar)
   - All pathfinding is now handled via WebAssembly, this allows for record breaking pathfinding on even the largest of maps
 - Added a setting to allow GMs to disable pathfinding for players
-- Removed the teleport ability since the keybinding for it will interfere with the drag measurment being added to PF2e
+- Removed the teleport ability since the key binding for it will interfere with the drag measurement being added to PF2e
 
 # 6.5.4
 

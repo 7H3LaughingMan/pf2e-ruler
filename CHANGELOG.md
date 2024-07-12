@@ -1,3 +1,7 @@
+# 6.6.1
+
+- Small fix to make sure if there is a cost function or not, also fixed the variable name
+
 # 6.6.0
 
 - Improved Pathfinding [pf2e-astar](https://github.com/7H3LaughingMan/pf2e-astar)

@@ -309,11 +309,11 @@ export class DragRuler extends PIXI.Container {
                     cumulativeDiagonals++;
                 }
 
-                cumulativeCost += costFn ? cost(o0, o1, k * canvas.grid.distance) : k * canvas.grid.distance;
+                cumulativeCost += costFn != null ? costFn(o0, o1, k * canvas.grid.distance) : k * canvas.grid.distance;
             }
 
             if (canvas.grid.isHexagonal) {
-                cumulativeCost += costFn ? cost(o0, o1, canvas.grid.distance) : canvas.grid.distance;
+                cumulativeCost += costFn != null ? costFn(o0, o1, canvas.grid.distance) : canvas.grid.distance;
             }
 
             o1.cost = cumulativeCost;

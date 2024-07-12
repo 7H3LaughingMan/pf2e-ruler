@@ -1,0 +1,65 @@
+{
+    "pf2e-ruler": {
+        "clearMovementHistory": "Wyczyść historię ruchu",
+        "settings": {
+            "rightClickAction": {
+                "name": "Kliknięcie prawym przyciskiem myszy",
+                "hint": "Jaką akcję należy wykonać po kliknięciu prawym przyciskiem myszy podczas przeciągania tokena?",
+                "choices": {
+                    "add": "Dodaj punkt trasy",
+                    "remove": "Usuń punkt trasy",
+                    "cancel": "Anuluj przeciąganie linijki"
+                }
+            },
+            "tokenHighlighting": {
+                "name": "Używanie podświetlania szybkości tokenów",
+                "hint": "Podczas korzystania z linijki, czy ma ona podświetlić szybkość tokena.",
+                "choices": {
+                    "never": "Nigdy",
+                    "combat": "Podczas walki",
+                    "always": "Zawsze"
+                }
+            },
+            "limitActions": {
+                "name": "Ogranicz akcje",
+                "hint": "Ograniczy to liczbę akcji dostępnych dla tokena, jeśli jest on spowolniony/ogłuszony."
+            },
+            "enableMovementHistory": {
+                "name": "Włączenie historii ruchów w walce",
+                "hint": "Jeśli ta opcja jest włączona, PF2e Ruler zapamięta ścieżkę, którą token przebył podczas swojej tury w walce."
+            },
+            "showPlayerSpeeds": {
+                "name": "Pokaż szybkość gracza",
+                "hint": "Jeśli ta opcja jest włączona, każdy token należący do gracza będzie miał podświetloną szybkość, nawet jeśli użytkownik nie ma uprawnień obserwatora dla tego aktora."
+            },
+            "playerPathfinding": {
+                "name": "Włącz wyznaczanie ścieżki gracza",
+                "hint": "Po aktywacji umożliwia graczom dostęp do wyszukiwania ścieżek."
+            },
+            "showGMRuler": {
+                "name": "Pokaż linijkę MG",
+                "hint": "Linijka dla MG będzie wyświetlana na podstawie dyspozycji tokena.",
+                "choices": {
+                    "all": "Pokaż wszystko",
+                    "neutral": "Pokaż przyjazne/neutralne",
+                    "friendly": "Pokaż przyjazne",
+                    "none": "Nie pokazuj żadnych"
+                }
+            },
+            "singleAction": "Pojedyncza akcja",
+            "doubleAction": "Podwójna akcja",
+            "tripleAction": "Potrójna akcja",
+            "quadrupleAction": "Poczwórna akcja",
+            "unreachable": "Nieosiągalne"
+        },
+        "keybindings": {
+            "addWaypoint": "Dodaj punkt trasy",
+            "cancelDrag": "Anuluj przeciąganie linijki",
+            "removeWaypoint": "Usuń punkt trasy"
+        },
+        "controls": {
+            "dragRuler": "Linijka do przeciągania tokenów",
+            "pathfinding": "Wyszukiwanie ścieżek"
+        }
+    }
+}

@@ -2,7 +2,7 @@
     "id": "pf2e-ruler",
     "title": "PF2e Token Drag Ruler",
     "description": "This module allows you to display a ruler when dragging a token that will show you how far you've moved that token.",
-    "version": "6.6.1",
+    "version": "6.6.3",
     "compatibility": {
         "minimum": "12.327",
         "verified": "12.327",
@@ -53,6 +53,11 @@
             "lang": "en",
             "name": "English",
             "path": "languages/en.json"
+        },
+        {
+            "lang": "pl",
+            "name": "Polski",
+            "path": "languages/pl.json"
         }
     ]
 }

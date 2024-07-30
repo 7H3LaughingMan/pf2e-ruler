@@ -1,3 +1,5 @@
+# This module is no longer being maintained! Please use [PF2e Compass](https://github.com/7H3LaughingMan/pf2e-compass) if you would like to add pathfinding capabilities to the new PF2e token drag measurement tool.
+
 # PF2e Token Drag Ruler
 
 ![GitHub Release](https://img.shields.io/github/v/release/7H3LaughingMan/pf2e-ruler) ![GitHub Release Date](https://img.shields.io/github/release-date/7H3LaughingMan/pf2e-ruler) ![GitHub commits since latest release](https://img.shields.io/github/commits-since/7H3LaughingMan/pf2e-ruler/latest)
